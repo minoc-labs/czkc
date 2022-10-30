@@ -6,33 +6,16 @@ import "./ERC20.sol";
 
 contract CZKC is ERC20{
     address public owner;
-    mapping(address => bool) public minter;
 
     constructor() {
         name = "CZK Coin";
         symbol = "CZKC";
         decimals = 18;
         owner = msg.sender;
-        minter[msg.sender] = true;
-    }
-
-    function setOwner(address to) external {
-        require(owner == msg.sender);
-        owner = to;
-    }
-
-    function addMinter(address to) external {
-        require(owner == msg.sender);
-        minter[to] = true;
-    }
-
-    function removeMinter(address to) external {
-        require(owner == msg.sender);
-        minter[to] = false;
     }
 
     function mint(address recipient, uint amount) external returns(bool) {
-        require(minter[msg.sender] == true);
+        require(owner == msg.sender);
         totalSupply += amount;
         balanceOf[recipient] += amount;
         emit Transfer(address(0), recipient, amount);
